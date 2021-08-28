@@ -1,7 +1,7 @@
 {
   "name": "knex-with-relations",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.1",
+  "main": "dist/knex-with-relations.js",
   "repository": "git@github.com:acro5piano/knex-with-relations",
   "author": "gosho-kazuya <ketsume0211@gmail.com>",
   "license": "MIT",
@@ -13,6 +13,14 @@
     "sqlite3": "^5.0.2",
     "typescript": "^4.4.2"
   },
+  "files": [
+    "dist/*.js",
+    "dist/*.map",
+    "dist/*.ts",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "test": "ava --serial"
   }
