@@ -4,8 +4,7 @@ A Knex plugin for batch loading table relations.
 
 # Features
 
-- Includes the TypeScript type definition.
-- Works with `select` and `returning`.
+- Use `whereIn` clause to filter relations, which should be good for performance in the most of situations
 - Under 40 LOC
 
 # Install
