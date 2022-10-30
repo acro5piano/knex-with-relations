@@ -3,7 +3,7 @@ import KnexStatic, { Knex } from 'knex'
 declare module 'knex' {
   namespace Knex {
     interface QueryInterface<TRecord extends {} = any, TResult = any> {
-      withRelations<T>(
+      withRelations<T extends {}>(
         query: Knex.QueryBuilder<T, any>,
         joinFrom: string,
         joinTo: string,
