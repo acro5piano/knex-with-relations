@@ -28,7 +28,9 @@ KnexStatic.QueryBuilder.extend(
       
       const groupedRelations = relations.reduce((acc: any, curr: any) => {
         const key = curr[joinTo]
-        if (!acc[key]) acc[key] = []
+        if (!acc[key]) {
+          acc[key] = []
+        }
         acc[key].push(curr)
         return acc
       }, {})
