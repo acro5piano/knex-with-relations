@@ -1,0 +1,23 @@
+name: test
+on:
+  push:
+    paths:
+      - 'src/**'
+      - '.github/workflows/test.yml'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+      - uses: actions/cache@master
+        with:
+          key: v1-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          path: node_modules
+      - name: test
+        run: |
+          yarn install
+          yarn tsc
+          yarn test
