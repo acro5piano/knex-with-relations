@@ -1,6 +1,6 @@
 {
   "name": "knex-with-relations",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/knex-with-relations.js",
   "repository": "git@github.com:acro5piano/knex-with-relations",
   "author": "gosho-kazuya <ketsume0211@gmail.com>",
