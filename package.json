@@ -1,10 +1,14 @@
 {
   "name": "knex-with-relations",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/knex-with-relations.js",
   "repository": "git@github.com:acro5piano/knex-with-relations",
   "author": "gosho-kazuya <ketsume0211@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "prepare": "tsc",
+    "test": "ava --serial"
+  },
   "devDependencies": {
     "ava": "^5.0.1",
     "esbuild": "^0.12.24",
@@ -20,8 +24,5 @@
     "package.json",
     "LICENSE",
     "README.md"
-  ],
-  "scripts": {
-    "test": "ava --serial"
-  }
+  ]
 }
