@@ -1,9 +1,6 @@
 name: test
 on:
-  push:
-    paths:
-      - 'src/**'
-      - '.github/workflows/test.yml'
+  push: {}
 jobs:
   build:
     runs-on: ubuntu-latest
