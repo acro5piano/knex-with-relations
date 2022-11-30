@@ -25,16 +25,10 @@ KnexStatic.QueryBuilder.extend(
     return this.then(async (rows: any) => {
       const parentIds = rows.map((result: any) => result[joinFrom])
       const relations = await query.whereIn(joinTo, parentIds)
-      
-      const groupedRelations = relations.reduce((acc: any, curr: any) => {
-        const key = curr[joinTo]
-        if (!acc[key]) acc[key] = []
-        acc[key].push(curr)
-        return acc
-      }, {})
-
       return rows.map((row: any) => {
-        row[joinFrom] = groupedRelations[row[joinFrom]] || []
+        row[childTableName] = relations.filter(
+          (r: any) => r[joinTo] === row[joinFrom],
+        )
         return row
       })
     }) as any
