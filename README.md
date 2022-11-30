@@ -41,3 +41,7 @@ knex('users').withRelations(knex('posts'), 'id', 'user_id').then(console.log)
       },
     ]
 ```
+
+# For v0.0.3 users
+
+Please update to the latest version. v0.0.3 does not work well at all.
