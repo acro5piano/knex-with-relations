@@ -7,6 +7,16 @@ const knex = createKnex({
   connection: ':memory:',
 })
 
+interface User {
+  id: number
+}
+
+interface Post {
+  id: number
+  userId: number
+  title: string
+}
+
 test('knex-with-relations', async (t) => {
   await knex.schema.createTable('users', (t) => {
     t.increments()
@@ -31,24 +41,29 @@ test('knex-with-relations', async (t) => {
   // @ts-ignore
   knex.on('query', ({ sql }) => t.snapshot(sql))
 
-  await knex('users')
+  const res = await knex<User>('users')
     .where({ id: 1 })
-    .withRelations(knex('posts'), 'id', 'user_id')
+    .withRelations(knex<Post>('posts'), 'id', 'user_id')
+  t.true(Array.isArray(res))
+
+  await knex<User>('users')
+    .where({ id: 1 })
+    .withRelations(knex<Post>('posts'), 'id', 'user_id')
     .then(t.snapshot)
 
-  await knex('users')
+  await knex<User>('users')
     .whereIn('id', [2, 3])
-    .withRelations(knex('posts'), 'id', 'user_id')
+    .withRelations(knex<Post>('posts'), 'id', 'user_id')
     .then(t.snapshot)
 
-  await knex('users')
+  await knex<User>('users')
     .limit(1)
     .orderBy('id', 'desc')
-    .withRelations(knex('posts').select('id', 'user_id'), 'id', 'user_id')
+    .withRelations(knex<Post>('posts').select('id', 'user_id'), 'id', 'user_id')
     .then(t.snapshot)
 
-  await knex('posts')
+  await knex<Post>('posts')
     .where({ id: 3 })
-    .withRelations(knex('users'), 'user_id', 'id')
+    .withRelations(knex<User>('users'), 'user_id', 'id')
     .then(t.snapshot)
 })
