@@ -44,12 +44,11 @@ test('knex-with-relations', async (t) => {
   const res = await knex<User>('users')
     .where({ id: 1 })
     .withRelations(knex<Post>('posts'), 'id', 'user_id')
+    .then((res) => {
+      t.snapshot(res)
+      return res
+    })
   t.true(Array.isArray(res))
-
-  await knex<User>('users')
-    .where({ id: 1 })
-    .withRelations(knex<Post>('posts'), 'id', 'user_id')
-    .then(t.snapshot)
 
   await knex<User>('users')
     .whereIn('id', [2, 3])
