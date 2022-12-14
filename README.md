@@ -45,3 +45,7 @@ knex('users').withRelations(knex('posts'), 'id', 'user_id').then(console.log)
 # For v0.0.3 users
 
 Please update to the latest version. v0.0.3 does not work well at all.
+
+# TODO
+
+- [ ] Stronger TypeScript support. Currently it does not change type definition, meaning that child attributes are ignored. I tried to implement using `infer`, but no luck. If you are enough knowledge to implement it, please send a PR. Thanks.
