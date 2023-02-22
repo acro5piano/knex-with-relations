@@ -1,2 +1,2 @@
-export * from './knex-with-relation'
-export * from './knex-with-relations'
+export * from './knex-extends/withHasManyRelation'
+export * from './knex-extends/withHasOneRelation'

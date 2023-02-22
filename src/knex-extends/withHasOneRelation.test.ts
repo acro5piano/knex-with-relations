@@ -1,5 +1,5 @@
-import '.'
-import { knex, User } from './test-utils'
+import '..'
+import { knex, User } from '../test-utils'
 import test from 'ava'
 
 test.before(async () => {
@@ -19,13 +19,13 @@ test('check the SQL', async (t) => {
   knex.on('query', ({ sql }) => t.snapshot(sql))
   await knex<User>('users')
     .where({ id: 1 })
-    .withRelation(knex<User>('users'), 'id', 'invited_by')
+    .withHasOneRelation(knex<User>('users'), 'id', 'invited_by')
 })
 
 test('check the value', async (t) => {
   await knex<User>('users')
     .where({ id: 1 })
-    .withRelation(knex<User>('users'), 'id', 'invited_by')
+    .withHasOneRelation(knex<User>('users'), 'id', 'invited_by')
     .then((res) =>
       t.deepEqual(res, [
         {
@@ -38,13 +38,21 @@ test('check the value', async (t) => {
         },
       ]),
     )
+  await knex<User>('users')
+    .where({ id: 1 })
+    .withHasOneRelation(knex<User>('users'), 'id', 'invited_by', {
+      as: 'inviter',
+    })
+    .then((res) =>
+      t.deepEqual(res, [
+        {
+          id: 1,
+          invited_by: null,
+          inviter: {
+            id: 2,
+            invited_by: 1,
+          },
+        },
+      ]),
+    )
 })
-
-// test('check the type', async (t) => {
-//   function expectType<T>(_expression: T): void {}
-//   const res = await knex<User>('users')
-//     .where({ id: 1 })
-//     .withRelations(knex<Post>('posts'), 'id', 'user_id')
-//   expectType<Array<User>>(res) // TODO: we should invent a way to reliably type `Array<(User & { posts: Post[] })>`
-//   t.pass()
-// })

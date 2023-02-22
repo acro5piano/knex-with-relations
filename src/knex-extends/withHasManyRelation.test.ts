@@ -1,5 +1,5 @@
-import '.'
-import { knex, Post, User } from './test-utils'
+import '..'
+import { knex, Post, User } from '../test-utils'
 import test from 'ava'
 
 test.before(async () => {
@@ -19,26 +19,30 @@ test('check the SQL', async (t) => {
   knex.on('query', ({ sql }) => t.snapshot(sql))
   await knex<User>('users')
     .where({ id: 1 })
-    .withRelations(knex<Post>('posts'), 'id', 'user_id')
+    .withHasManyRelation(knex<Post>('posts'), 'id', 'user_id')
   await knex<User>('users')
     .whereIn('id', [2, 3])
-    .withRelations(knex<Post>('posts'), 'id', 'user_id')
+    .withHasManyRelation(knex<Post>('posts'), 'id', 'user_id')
     .then(t.snapshot)
   await knex<User>('users')
     .limit(1)
     .orderBy('id', 'desc')
-    .withRelations(knex<Post>('posts').select('id', 'user_id'), 'id', 'user_id')
+    .withHasManyRelation(
+      knex<Post>('posts').select('id', 'user_id'),
+      'id',
+      'user_id',
+    )
     .then(t.snapshot)
   await knex<Post>('posts')
     .where({ id: 3 })
-    .withRelations(knex<User>('users'), 'user_id', 'id')
+    .withHasManyRelation(knex<User>('users'), 'user_id', 'id')
     .then(t.snapshot)
 })
 
 test('check the value', async (t) => {
   await knex<User>('users')
     .where({ id: 1 })
-    .withRelations(knex<Post>('posts'), 'id', 'user_id')
+    .withHasManyRelation(knex<Post>('posts'), 'id', 'user_id')
     .then((res) =>
       t.deepEqual(res, [
         {
@@ -56,7 +60,7 @@ test('check the value', async (t) => {
     )
   await knex<User>('users')
     .whereIn('id', [2, 3])
-    .withRelations(knex<Post>('posts'), 'id', 'user_id')
+    .withHasManyRelation(knex<Post>('posts'), 'id', 'user_id')
     .then((res) =>
       t.deepEqual(res, [
         {
@@ -81,7 +85,7 @@ test('check the value', async (t) => {
   await knex<User>('users')
     .limit(1)
     .orderBy('id', 'desc')
-    .withRelations(
+    .withHasManyRelation(
       knex<Post>('posts').select('user_id', 'title'),
       'id',
       'user_id',
@@ -101,7 +105,7 @@ test('check the value', async (t) => {
     )
   await t.throwsAsync(
     async () => {
-      await knex<User>('users').withRelations(
+      await knex<User>('users').withHasManyRelation(
         knex<Post>('posts').select('title'),
         'id',
         'user_id',
@@ -113,7 +117,7 @@ test('check the value', async (t) => {
   )
   await knex<Post>('posts')
     .where({ id: 3 })
-    .withRelations(knex<User>('users'), 'user_id', 'id')
+    .withHasManyRelation(knex<User>('users'), 'user_id', 'id')
     .then((res) =>
       t.deepEqual(res, [
         {
@@ -124,13 +128,26 @@ test('check the value', async (t) => {
         },
       ]),
     )
+  await knex<Post>('posts')
+    .where({ id: 3 })
+    .withHasManyRelation(knex<User>('users'), 'user_id', 'id', { as: 'user' })
+    .then((res) =>
+      t.deepEqual(res, [
+        {
+          id: 3,
+          user_id: 2,
+          title: 'post 3',
+          user: [{ id: 2, invited_by: null }],
+        },
+      ]),
+    )
 })
 
 test('check the type', async (t) => {
   function expectType<T>(_expression: T): void {}
   const res = await knex<User>('users')
     .where({ id: 1 })
-    .withRelations(knex<Post>('posts'), 'id', 'user_id')
+    .withHasManyRelation(knex<Post>('posts'), 'id', 'user_id')
   expectType<Array<User>>(res) // TODO: we should invent a way to reliably type `Array<(User & { posts: Post[] })>`
   t.pass()
 })
