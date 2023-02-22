@@ -16,20 +16,25 @@ KnexStatic.QueryBuilder.extend(
   'withRelations',
   function withRelations(
     this,
-    query: Knex.QueryBuilder,
+    relationQuery: Knex.QueryBuilder,
     joinFrom: string,
     joinTo: string,
   ) {
     // @ts-ignore
-    const childTableName = query._single.table
-    return this.then(async (rows: any) => {
-      const parentIds = rows.map((result: any) => result[joinFrom])
-      const relations = await query.whereIn(joinTo, parentIds)
-      return rows.map((row: any) => {
-        row[childTableName] = relations.filter(
-          (r: any) => r[joinTo] === row[joinFrom],
-        )
-        return row
+    const childTableName = relationQuery._single.table
+    return this.then(async (parentRows: any) => {
+      const parentIds = parentRows.map((result: any) => result[joinFrom])
+      const relations = await relationQuery.whereIn(joinTo, parentIds)
+      return parentRows.map((parentRow: any) => {
+        parentRow[childTableName] = relations.filter((relation: any) => {
+          if (relation[joinTo] === undefined) {
+            throw new Error(
+              `knex-with-relations: relation query is missing join column, "${joinTo}". Maybe you forgot to select it?`,
+            )
+          }
+          return relation[joinTo] === parentRow[joinFrom]
+        })
+        return parentRow
       })
     }) as any
   },

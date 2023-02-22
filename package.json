@@ -10,6 +10,7 @@
     "test": "ava --serial"
   },
   "devDependencies": {
+    "@types/node": "^18.14.0",
     "ava": "^5.0.1",
     "esbuild": "^0.12.24",
     "esbuild-register": "^3.0.0",
