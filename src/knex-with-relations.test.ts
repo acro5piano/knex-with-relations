@@ -2,6 +2,8 @@ import './knex-with-relations'
 import createKnex from 'knex'
 import test from 'ava'
 
+export function expectType<T>(_expression: T): void {}
+
 const knex = createKnex({
   client: 'sqlite3',
   connection: ':memory:',
@@ -49,6 +51,7 @@ test('knex-with-relations', async (t) => {
       return res
     })
   t.true(Array.isArray(res))
+  expectType<Array<User>>(res) // TODO: we should invent a way to reliably type `Array<(User & { posts: Post[] })>`
 
   await knex<User>('users')
     .whereIn('id', [2, 3])
