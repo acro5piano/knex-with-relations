@@ -7,6 +7,7 @@ export function expectType<T>(_expression: T): void {}
 const knex = createKnex({
   client: 'sqlite3',
   connection: ':memory:',
+  useNullAsDefault: true,
 })
 
 interface User {
