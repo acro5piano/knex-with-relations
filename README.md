@@ -82,14 +82,12 @@ knex('users')
 // Result
 {
   id: 1,
-  latest_post: [
-    {
-      id: 1,
-      title: 'post 1',
-      user_id: 1,
-      created_at: 'Wed Feb 22 05:23:47 PM JST 2023',
-    },
-  ],
+  latest_post: {
+    id: 1,
+    title: 'post 1',
+    user_id: 1,
+    created_at: 'Wed Feb 22 05:23:47 PM JST 2023',
+  },
 }
 ```
 
